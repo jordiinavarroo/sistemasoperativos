@@ -19,6 +19,6 @@ int main() {
             getpid(), pid);
             sleep (30);
         }
-    printf("Final de ejecuciÃ³n de %d \n", getpid());
+    printf("Final de ejecución de %d \n", getpid());
     exit(0);
 } 
