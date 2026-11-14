@@ -1,0 +1,55 @@
+#include "gdefs.cm"
+
+const
+	int BARRIER1 = 4;    
+	int BARRIER2 = 5;
+	int PRODUCER =101;  
+	int PACKAGE =102;  
+	int CONSUMER =103;
+
+semaphore s = 1;
+semaphore e = 10;
+semaphore n = 0;
+
+void consumer() {
+	int i;
+	for(i = 0; i < 10; i++){
+		wait(n);
+		wait(s);
+		moveby(CONSUMER, -225, 0);
+		moveby(PACKAGE, 225, 0);	
+		moveby(CONSUMER, 225, 0);		
+		signal(s);
+		signal(e);
+		moveby(PACKAGE, -225, 0);
+	}
+		moveby(PACKAGE, 225, 0);
+}
+
+void producer(){
+	int i;
+	for(i = 0; i < 10; i++){
+		wait(e);
+		wait(s);
+		moveby(PRODUCER, 225, 0);
+		moveby(PACKAGE, 225, 0);	
+		moveby(PACKAGE, -225, 0);
+		moveby(PRODUCER, -225, 0);
+		signal(s);
+		signal(n);
+	}
+		moveby(PACKAGE, 225, 0);
+}
+
+void main() {
+	create(PRODUCER, ANIMAGE, 0,   	25, 170,  1, 1);
+	create(PACKAGE, ANIMAGE, 0, 	50, 350,  60, 60);
+	create(CONSUMER, ANIMAGE, 0,  	475, 200, 60, 60);
+	create(BARRIER1, RECTANGLE, BLACK,  	200, 100, 10, 500);   
+	create(BARRIER2, RECTANGLE, BLACK,  	450, 100, 10, 500);  
+
+ 	cobegin{
+		producer();
+		consumer();
+	}
+}
